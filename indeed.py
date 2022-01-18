@@ -30,8 +30,13 @@ def extract_indeed_jobs(last_page):
   #for page in range(last_page):
   result = requests.get(f"{URL}&start={0*LIMIT}")
   soup = BeautifulSoup(result.text, "html.parser")
-  results = soup.find_all("div", {"class": "job_seen_beacon"})
+  results = soup.find_all("td", {"class": "resultContent"})
   for result in results:
-    title = result.find("span", title=True).text
-    print(title)
+    title = result.find("span", title=True).string
+    company = result.find("span", {"class": "companyName"})
+    company_anchor = company.find("a")
+    if company.find("a") is not None:
+      company = company_anchor.string
+    else:
+      company = company.string
   return jobs
